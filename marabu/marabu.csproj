@@ -126,7 +126,6 @@
     <Compile Include="Server.cs" />
     <Compile Include="ServerSettings.cs" />
     <Compile Include="SocketClient.cs" />
-    <Compile Include="TAPIParameter.cs" />
     <Compile Include="text.cs" />
     <Compile Include="Utils.cs" />
     <Compile Include="WSClientInfo.cs" />

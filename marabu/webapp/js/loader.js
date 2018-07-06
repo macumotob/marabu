@@ -174,7 +174,7 @@ function run_web_socket() {
         console.log(e);
     };
     ws.onopen = function () {
-        ws.send(JSON.stringify({ cmd: 'tapi', user: 'buba' }));
+        ws.send(JSON.stringify({ cmd: 'Hi', user: 'buba' }));
         console.log("Connection opened...");
     };
 

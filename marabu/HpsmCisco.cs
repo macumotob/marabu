@@ -1,4 +1,5 @@
-﻿using System;
+﻿#if _USE_CISCO
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -139,3 +140,4 @@ namespace marabu
       }
     }//end of class
 }
+#endif

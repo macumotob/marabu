@@ -76,9 +76,9 @@ namespace marabu
 
     private string _commandMenuItemId { get; set; }
     private string _commandFieldId { get; set; }
-    private string _ciscoHost;// = "10.0.0.208"; //gcou-uccx-1.skoj.kz
-    private int _ciscoPort;
-    private int _ciscoBindPort;
+    
+    
+    
     private bool _full_log_mode = true;
     //public bool Run(string host,int port,string menuId,string fieldId,string  cisco)
     public bool Run(ServerSettings settings)
@@ -89,9 +89,6 @@ namespace marabu
       _commandMenuItemId = settings.MenuItemId;
       _commandFieldId = settings.FieldId;
 
-      _ciscoHost = settings.CiscoSelectedHost;
-      _ciscoPort = settings.iCiscoPort;
-      _ciscoBindPort = settings.iCiscoNotifierPort;
       _full_log_mode = settings.FullLogMode;
 
       if (_isWorking)
@@ -199,7 +196,7 @@ namespace marabu
            {
              Task.Factory.StartNew(() =>
              {
-               client = new SocketClient(this, _commandMenuItemId,_commandFieldId,_ciscoHost,_ciscoPort,_ciscoBindPort,_full_log_mode);
+               client = new SocketClient(this, _commandMenuItemId,_commandFieldId,_full_log_mode);
                client.Execute(context);
              }, TaskCreationOptions.LongRunning);
            }
@@ -387,7 +384,7 @@ namespace marabu
       lock (_lockObject)
       {
         WSClientInfo info = new WSClientInfo() { UserName = userName, WIN = win, Command = WSClientStatus.reg , Pulse = 1 };
-        info.CiscoExtention = HpsmCisco.Instance.FindCiscoUser(userName);
+        //info.CiscoExtention = HpsmCisco.Instance.FindCiscoUser(userName);
         _users.Add(info);
         _raiseUserChanged(info);
         return info;
@@ -397,7 +394,7 @@ namespace marabu
     {
       lock (_lockObject)
       {
-        info.CiscoExtention = HpsmCisco.Instance.FindCiscoUser(info.UserName);
+        //info.CiscoExtention = HpsmCisco.Instance.FindCiscoUser(info.UserName);
         _users.Add(info);
         _raiseUserChanged(info);
       }

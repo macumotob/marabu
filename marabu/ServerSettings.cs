@@ -17,9 +17,6 @@ namespace marabu
     public const string FIELD_ID_NAME = "fieldId";
     public const string FULL_LOG_MODE_NAME = "full_log_mode";
 
-    public const string CISCO_HOSTS_NAME = "cisco_hosts";
-    public const string CISCO_PORT_NAME = "cisco_port";
-    public const string CISCO_NOTIFIER_PORT_NAME = "cisco_bind_port";
     public const string SERVER_LOG_FOLDER_NAME = "server_log_folder";
 
     public string MarabuHost { get; set; }
@@ -64,35 +61,8 @@ namespace marabu
         }
       }
     }
-    public string CiscoHosts { get; set; }
-    public string CiscoSelectedHost { get; set; }
-    private string _ciscoPort;
-    public string CiscoPort
-    {
-      get
-      {
-        return _ciscoPort;
-      }
-      set
-      {
-        _ciscoPort = value;
-        iCiscoPort = int.Parse(_ciscoPort);
-      }
-    }
-    public int iCiscoPort { get; set; }
-    private string _ciscoNotifierPort;
-    public string CiscoNotifierPort
-    {
-      get
-      {
-        return _ciscoNotifierPort;
-      }
-      set
-      {
-        _ciscoNotifierPort = value;
-        iCiscoNotifierPort = int.Parse(_ciscoNotifierPort);
-      }
-    }
+    
+    
     public int iCiscoNotifierPort { get; set; }
 
     public string MenuItemId { get; set; }
@@ -107,11 +77,6 @@ namespace marabu
 
       MarabuHost = config.AppSettings.Settings[MARABU_HOST_NAME].Value;
       MarabuPort = config.AppSettings.Settings[MARABU_PORT_NAME].Value;
-
-      CiscoHosts = config.AppSettings.Settings[CISCO_HOSTS_NAME].Value;
-      CiscoPort = config.AppSettings.Settings[CISCO_PORT_NAME].Value;
-      CiscoNotifierPort = config.AppSettings.Settings[CISCO_NOTIFIER_PORT_NAME].Value;
-
 
       MenuItemId = config.AppSettings.Settings[MENUITEM_ID_NAME].Value;
       FieldId = config.AppSettings.Settings[FIELD_ID_NAME].Value;
@@ -133,9 +98,6 @@ namespace marabu
       config.AppSettings.Settings[MENUITEM_ID_NAME].Value = MenuItemId;
       config.AppSettings.Settings[FIELD_ID_NAME].Value = FieldId;
 
-      config.AppSettings.Settings[CISCO_HOSTS_NAME].Value = CiscoHosts;
-      config.AppSettings.Settings[CISCO_PORT_NAME].Value = CiscoPort;
-      config.AppSettings.Settings[CISCO_NOTIFIER_PORT_NAME].Value = CiscoNotifierPort;
       config.AppSettings.Settings[SERVER_LOG_FOLDER_NAME].Value = ServerLogFolder;
       config.AppSettings.Settings[FULL_LOG_MODE_NAME].Value = FullLogMode.ToString();
 

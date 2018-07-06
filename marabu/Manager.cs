@@ -130,7 +130,7 @@ namespace marabu
       Manager.SrvLog = Manager.Log;
       
       Manager.SrvLog =  new Logger("srv", Settings.ServerLogFolder);
-      HpsmCisco.Instance.Load();
+      //HpsmCisco.Instance.Load();
 
       _text = "";
       _wsServer.Run(Settings);

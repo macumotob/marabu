@@ -14,7 +14,7 @@ namespace marabu
     public const string STATE_NOT_READY = "NOT_READY";
     public const string STATE_READY = "READY";
 
-    public const string STATE_TAPI = "tapi";
+    public const string COMMAND_HI = "Hi";
 
     public const string CISCO_COMMAND_ERROR = "error";
     public const string CISCO_ERROR_TEXT = "-CISCO ERROR";
@@ -26,8 +26,8 @@ namespace marabu
     public const string BOSH_TERMINATE = "<body xmlns=\"http://jabber.org/protocol/httpbind\" type=\"terminate\"></body>";
     public const string BOSH_HEART_BIT = "<body xmlns=\"http://jabber.org/protocol/httpbind\"></body>";
 
-    public const string FINESSE_LOGIN = "login";
-    public const string FINESSE_LOGOUT = "logout";
+    
+    
     public const string FINESSE_USER_STATE_CHANGE = "userstatus";
     public const string FINESSE_MAKE_CALL = "makecall";
     public const string FINESSE_DIALOG_ACTION = "dialog";
@@ -36,10 +36,8 @@ namespace marabu
     public const string HPSM_HEART_BIT= "tapi";
     public const string HPSM_REGISTER_USER = "reg";
     public const string HPSM_UNREGISTER_USER = "unreg";
-    public const string HPSM_CHANGE_USER_STATE = "status";
-    public const string HPSM_MAKE_CALL = "call";
-    public const string HPSM_DIALOG_ACTION = "action";
-    public const string HPSM_REDIRECT = "redirect";
-    public const string HPSM_HISTORY =  "history";
+    
+    
+    
   }
 }
