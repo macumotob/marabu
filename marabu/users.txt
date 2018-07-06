@@ -1,0 +1,65 @@
+﻿#
+#  this is comment
+#  формат записи  hpsm : cisco в одной строке
+
+# пустые строки игнорируются
+
+#1 список пользователей с рабочего стола.
+#2 sm menu id = ROOT/Обращения/Создание обращения по телефону
+#3 sm field id = X2
+#4 server 10.0.0.209
+#5 https://uccx1.skoj.kz:8445
+#6 tomcat - папка smcopy
+
+
+#  falcon  : 2003
+#  falcon1 : 2004
+#  falcon2 : 2005
+#  falcon3 : 2002
+
+#############################################
+
+#
+#  this is comment
+#  формат записи  hpsm : cisco в одной строке
+
+# пустые строки игнорируются
+
+falcon  : 2004
+falcon1 : 2002
+falcon2 : 2003
+
+dispetcher:2003
+
+
+abildina.a:                         0101
+abuova.b:                         0102
+akhmetzhanova.a:            0103
+bekbosynova.b:                0104
+erbatyrova.k:                     0105
+giniyatova.yu:                    0106
+isina.b:                               0107
+kabdullina.s:                      0108
+kuanyshbaeva.m:              0109
+kumysbekova.zh:              0110
+kurmanova.a:                    0111
+kurmanova.n:                    0112
+mussagaliyeva.sh:             0113
+rakhimzhanova.a:              0114
+sagintaeva.a:                     0115
+saktapbergenova.s:           0116
+salhauova.k:                      0117
+sydykova.g:                       0118
+tazhina.zh:                         0119
+tulekeyeva.zh:                   0120
+urmanova.a:                      0121
+zhalgasbaeva.s:                0122
+zhazikbaeva.a:                  0123
+shinabekova.a: 0124
+
+
+
+# end of assosiation file
+#############################################
+
+# end of assosiation file

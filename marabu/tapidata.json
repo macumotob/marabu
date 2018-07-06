@@ -1,0 +1,41 @@
+﻿[
+  {
+    "cmd": "ROOT/Обращения/Создание обращения по телефону",
+    "p": [
+      {
+        "id": "X2",
+        "value": "Some ID"
+      }
+    ]
+  },
+  {
+    "cmd": "ROOT/Service Catalog/Tailoring/Add Field Mapping",
+    "p": [
+      {
+        "id": "X3",
+        "value": "some id"
+      },
+      {
+        "id": "X5",
+        "value": "source status"
+      },
+      {
+        "id": "X7",
+        "value": "source file name"
+      }
+    ]
+  },
+  {
+    "cmd": "ROOT/test link",
+    "p": [
+      {
+        "id": "X13",
+        "value": "12345678"
+      }
+    ]
+  }
+
+]
+
+
+
