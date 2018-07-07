@@ -158,30 +158,5 @@ function forE(arr, callback) {
   }
 }
 
-var ws;
-function run_web_socket() {
-
-    ws = new WebSocket('ws://192.168.1.3:13003/chat');
-
-
-    // Log messages from the server
-    ws.onmessage = function (e) {
-        id("label_info").innerText = JSON.parse(e.data).cmd;
-        console.log(e);
-    };
-    ws.onerror = function (e) {
-        console.log("error:");
-        console.log(e);
-    };
-    ws.onopen = function () {
-        ws.send(JSON.stringify({ cmd: 'Hi', user: 'buba' }));
-        console.log("Connection opened...");
-    };
-
-    // второй - когда соединено закроется
-    ws.onclose = function () { console.log("Connection closed...") };
-    //  CONNECTION.send('Hellow World');
-}
-run_web_socket();
 //--------------------------------------------------------------------------
 

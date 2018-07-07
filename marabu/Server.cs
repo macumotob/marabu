@@ -134,70 +134,70 @@ namespace marabu
       return address;
     }
 
-    public virtual bool Run2(string host, int port)//IPAddress address)
-    {
-      if (_isWorking)
-      {
-        //RaiseEvent("Already Running on host: " + _host + " port: " + _port.ToString());
-        RaiseStopped();
-        _isWorking = false;
-        return false;
-      }
-      IPAddress address = _findAddress(host, port);//IPAddress.Parse(host);
-      if (address == null)
-      {
-        RaiseStopped();
-        return false;
-      }
+    //public virtual bool Run2(string host, int port)//IPAddress address)
+    //{
+    //  if (_isWorking)
+    //  {
+    //    //RaiseEvent("Already Running on host: " + _host + " port: " + _port.ToString());
+    //    RaiseStopped();
+    //    _isWorking = false;
+    //    return false;
+    //  }
+    //  IPAddress address = _findAddress(host, port);//IPAddress.Parse(host);
+    //  if (address == null)
+    //  {
+    //    RaiseStopped();
+    //    return false;
+    //  }
 
-      _ipAddress = address;
-      _tokenSource = new CancellationTokenSource();
-      CancellationToken ctoken = _tokenSource.Token;
-      Server.ServerState x = new Server.ServerState();
-      x.State = 0;
+    //  _ipAddress = address;
+    //  _tokenSource = new CancellationTokenSource();
+    //  CancellationToken ctoken = _tokenSource.Token;
+    //  Server.ServerState x = new Server.ServerState();
+    //  x.State = 0;
 
 
-      _task = Task.Factory.StartNew((x2) =>
-      {
-        _clientCount = 0;
-        ctoken.ThrowIfCancellationRequested();
-        _isWorking = true;
+    //  _task = Task.Factory.StartNew((x2) =>
+    //  {
+    //    _clientCount = 0;
+    //    ctoken.ThrowIfCancellationRequested();
+    //    _isWorking = true;
 
-        _host = _ipAddress.ToString();
-        //_port = 8181;
+    //    _host = _ipAddress.ToString();
+    //    //_port = 8181;
 
-        var listener = new TcpListener(_ipAddress, _port);
-        RaiseStarted();
-        listener.Start();
+    //    var listener = new TcpListener(_ipAddress, _port);
+    //    RaiseStarted();
+    //    listener.Start();
         
 
-      //  this.RaiseEvent("Http server host :" + _host + " port: " + _port.ToString());
-        while (_isWorking)
-        {
-          Thread.Sleep(_sleepTime);
-          if (ctoken.IsCancellationRequested)
-          {
-            break;
-          }
-          var client = listener.AcceptTcpClient();
+    //  //  this.RaiseEvent("Http server host :" + _host + " port: " + _port.ToString());
+    //    while (_isWorking)
+    //    {
+    //      Thread.Sleep(_sleepTime);
+    //      if (ctoken.IsCancellationRequested)
+    //      {
+    //        break;
+    //      }
+    //      var client = listener.AcceptTcpClient();
         
-          Task.Factory.StartNew((x3) =>
-          {
-            _clientCount++;
-            Thread.Sleep(_sleepTime);
-            if ( _isWorking)//!ctoken.IsCancellationRequested)
-            {
-              ResponseToClient(client);
-            }
-          }, x, TaskCreationOptions.LongRunning).ContinueWith( (t) => 
-          {
-            _clientCount--;
-          });
-        }
-        listener.Stop();
-      }, _tokenSource, TaskCreationOptions.LongRunning);
-      return true;
-    }
+    //      Task.Factory.StartNew((x3) =>
+    //      {
+    //        _clientCount++;
+    //        Thread.Sleep(_sleepTime);
+    //        if ( _isWorking)//!ctoken.IsCancellationRequested)
+    //        {
+    //          ResponseToClient(client);
+    //        }
+    //      }, x, TaskCreationOptions.LongRunning).ContinueWith( (t) => 
+    //      {
+    //        _clientCount--;
+    //      });
+    //    }
+    //    listener.Stop();
+    //  }, _tokenSource, TaskCreationOptions.LongRunning);
+    //  return true;
+    //}
     public virtual void ResponseToClient(TcpClient client)
     {
 
@@ -230,12 +230,12 @@ namespace marabu
       this.RaiseStopped();
     }
 
-    public virtual void Stop2()
-    {
-      _isWorking = false;
-      TcpClient client = new TcpClient();
-      client.Connect(_host, _port);
-    }
+    //public virtual void Stop2()
+    //{
+    //  _isWorking = false;
+    //  TcpClient client = new TcpClient();
+    //  client.Connect(_host, _port);
+    //}
     public override string ToString()
     {
 

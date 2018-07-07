@@ -49,6 +49,8 @@ namespace marabu
             _manager.InitHandlers();
 
             _cmdRun.Click += _cmdRun_Click;
+            _cmdHttpUI.Click += _cmdHttpUI_Click;
+
             //_cmdSettings.Click += _cmdSettings_Click;
             _cmdServerLogFolder.Click += _cmdServerLogFolder_Click;
             _updateControls();
@@ -167,11 +169,8 @@ namespace marabu
 
         private void _enableDisable()
         {
-
             _cmdSave.Enabled = !_isRunning;
             _txtHttpPort.Enabled = !_isRunning;
-            _txtFieldId.Enabled = !_isRunning;
-            _txtMenuId.Enabled = !_isRunning;
             _txtServerLogFolder.Enabled = !_isRunning;
             _cmbHttpHost.Enabled = !_isRunning;
         }
@@ -209,25 +208,14 @@ namespace marabu
 
             _txtHttpPort.Text = s.MarabuPort;
 
-            _txtMenuId.Text = s.MenuItemId;
-            _txtFieldId.Text = s.FieldId;
-
             _txtServerLogFolder.Text = s.ServerLogFolder;
-
-
         }
         private void _updateData()
         {
             ServerSettings s = Manager.Instance.Settings;
             s.MarabuHost = _cmbHttpHost.Text;
             s.MarabuPort = _txtHttpPort.Text;
-
-            s.MenuItemId = _txtMenuId.Text;
-            s.FieldId = _txtFieldId.Text;
-
-
             s.ServerLogFolder = _txtServerLogFolder.Text;
-
             Manager.Instance.Settings.Save();
         }
 

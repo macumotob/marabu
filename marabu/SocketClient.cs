@@ -25,13 +25,8 @@ namespace marabu
         private CobaServer _server;
         private Exception _exception;
         private WSClientInfo _hpsmUser = new WSClientInfo();
-        //private CiscoClient _ciscoUser;// = new CiscoClient();
-        //private CiscoNotifier _notifier;
         private Logger _logger;
         private Logger _logger_history;
-#if CISCO_HISTORY
-    private CiscoDialogsHistory _history = new CiscoDialogsHistory();
-#endif
         private string _remoteAddress;
         private string _hpsmFolder;
         private string _hpsmField;
@@ -202,55 +197,13 @@ namespace marabu
             _logger.Log("Пользователь {0} начал работу.", _hpsmUser.CiscoExtention);
 
             _logger_history = new Logger(_hpsmUser.CiscoExtention + "H", Manager.SrvLog.Folder, false);
-            //if (_ciscoUser == null)
-            //{
-            //  _ciscoUser = new CiscoClient(_ciscoHost, _ciscoPort);
-            //  _ciscoUser.FullLogMode = _full_log_mode;
-            //  _ciscoUser.Log = _logger;
-            //}
 
-            //_ciscoUser.ResetExtemtion(_hpsmUser.CiscoExtention);
-
-#if CISCO_HISTORY
-      //_history.LoadHistory(_hpsmUser.CiscoExtention);
-      _history.SetExtention(_hpsmUser.CiscoExtention);
-#endif
-            //query.ciscoext = _hpsmUser.CiscoExtention;
-            query.folder = _hpsmFolder;
-            query.field = _hpsmField;
-            //query.status = _cisco_user_state == null ? text.HPSM_REGISTER_USER : _cisco_user_state;
-            _send_command(webSocket, query);
-
-            //if (_notifier == null)
-            //{
-            //  //_notifierFatal = false;
-            //  _notifier = new CiscoNotifier(_ciscoHost, _ciscoBindPort, _hpsmUser.CiscoExtention, _hpsmUser.CiscoExtention);
-            //  _notifier.FullLogMode = _full_log_mode;
-            //  _notifier.Log = _logger;
-            //  _notifier.Listen(); 
-            //}
-            //_ciscoUser.Listen();
         }
         private void _unregister_marabu_user()
         {
-            //Debug.Print("Marabu client unregister....");
-            //if (_notifier != null)
-            //{
-            //  _notifier.Terminate();
-            //  _notifier.WaitTernination();
-            //  _notifier = null;
-            //}
-            //if (_ciscoUser != null)
-            //{
-            //  _ciscoUser.Terminate();
-            //  _ciscoUser.WaitTernination();
-            //  _ciscoUser = null;
-            //}
             _logger.Log("Пользователь {0} закончил работу.", (_hpsmUser != null && _hpsmUser.CiscoExtention != null ? _hpsmUser.CiscoExtention : "NONE"));
             _server.UnregisterUser(_hpsmUser);
-            //Debug.Print("Marabu client unregistered.");
         }
-        //private bool _notifierFatal;
 
         private void _unregister_hpsm_user(WebSocket webSocket, PRNClientCommand query, string cmd)
         {
@@ -260,7 +213,8 @@ namespace marabu
         }
         private void _response_to_hi(WebSocket webSocket, PRNClientCommand query)
         {
-            query.cmd = "Hi! from server!";
+            query.cmd = text.COMMAND_HI;
+            query.user = Guid.NewGuid().ToString();
             _send_command(webSocket, query);
             return;
         }

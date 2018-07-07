@@ -1,50 +1,48 @@
 ﻿<!DOCTYPE html>
 <html lang="en">
 <head>
-  <title>PRN VW</title>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="stylesheet" href="/css/bootstrap.min.css">
-  <style>
-    input, textarea, button {outline: none; }
-  </style>
-  <script src="/js/loader.js"></script>
-  <!--
-      <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
-  -->
-  <script>
-	  function mb_onload(){
-	  }
-	  function ww_sendCommand()
-	  {
-	    var user = document.getElementById("user").value;
-	    var msg = document.getElementById("msg").value;
-	    var result = document.getElementById("result");
-	    if (user.isEmpty())
-	    {
-	      result.innerText = "Input user name";
-	      return;
-	    }
-	    if (msg.isEmpty()) {
-	      result.innerText = "Input command text";
-	      document.getElementById("msg").focus();
-	      return;
-	    }
+    <title>PRN VW</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+    <style>
+        input, textarea, button {
+            outline: none;
+        }
+    </style>
+    <script src="/js/loader.js"></script>
+    <script src="/js/send.js"></script>
+    <script src="/js/ws.js"></script>
+    <script>
+        function mb_onload() {
+        }
+        function ww_sendCommand() {
+            var user = document.getElementById("user").value;
+            var msg = document.getElementById("msg").value;
+            var result = document.getElementById("result");
+            if (user.isEmpty()) {
+                result.innerText = "Input user name";
+                return;
+            }
+            if (msg.isEmpty()) {
+                result.innerText = "Input command text";
+                document.getElementById("msg").focus();
+                return;
+            }
 
-	    result.innerText = "Sending...";
-	    load_async("/command?user=" + user + "&text=" + msg, function (data) {
-	      var x = eval( "(" + data + ")");
-	      if (x.result === 1)
-	      {
-	        result.innerText = "OK";
-	      }
-	      else {
-	        result.innerText = "Error send command ";
-	      }
-	      
-	    });
-	  }
-  </script>
+            result.innerText = "Sending...";
+            load_async("/command?user=" + user + "&text=" + msg, function (data) {
+                var x = eval("(" + data + ")");
+                if (x.result === 1) {
+                    result.innerText = "OK";
+                }
+                else {
+                    result.innerText = "Error send command ";
+                }
+
+            });
+        }
+    </script>
 </head>
 <body onload="mb_onload();">
 
@@ -75,11 +73,12 @@
           <input type="text" class="form-control" id="msg" placeholder="Enter text" required/>
         </div>
       </div>
+          <input id="image-file" type="file" />
     </form>
 
     <div class="row">
       
-      <button class="btn btn-success container" onclick="ww_sendCommand();">Send</button>
+      <button class="btn btn-success container" onclick="send_prn();">Send</button>
       
 
       <div class="panel panel-default">

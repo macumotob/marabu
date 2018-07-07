@@ -119,6 +119,8 @@
     <Compile Include="PRNClientCommand.cs" />
     <Compile Include="HttpServer.cs" />
     <Compile Include="Manager.cs" />
+    <Compile Include="PrnPicture.cs" />
+    <Compile Include="PrnReader.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Requestor.cs" />
@@ -142,6 +144,12 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="webapp\js\loader.js">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="webapp\js\ws.js">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="webapp\js\send.js">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <None Include="App.config">
