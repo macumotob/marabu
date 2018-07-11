@@ -19,6 +19,10 @@ namespace marabu
     [STAThread]
     static void Main()
     {
+            //PrnReader reader = new PrnReader();
+            //reader.Load(@"F:\Develops\PrnView\CobaPrnView\data\000(3).prn");// "F:\Develops\marabu\marabu\bin\Debug\data\000(3).prn" );
+            //reader.Parse();
+            //return;
       Manager.Log.Log("\r\n\r\n\r\n\t\tMARABU start.\r\n\r\n\r\n");
       Application.EnableVisualStyles();
       Application.SetCompatibleTextRenderingDefault(false);

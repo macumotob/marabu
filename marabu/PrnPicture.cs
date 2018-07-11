@@ -30,7 +30,7 @@ namespace marabu
             _height = height;
             _bitmap = new Bitmap(_width * _step, _height * _step, System.Drawing.Imaging.PixelFormat.Format24bppRgb); // or some other format
             _g = Graphics.FromImage(_bitmap);
-            _y = -1 * _step;
+            _y = 0;// -1 * _step;
             _Clear();
             _viewer.OnCommandReaded += _viewer_OnCommandReaded;
         }
@@ -40,7 +40,7 @@ namespace marabu
             _height = height;
             _bitmap = new Bitmap(_width * _step, _height * _step, System.Drawing.Imaging.PixelFormat.Format24bppRgb); // or some other format
             _g = Graphics.FromImage(_bitmap);
-            _y = -1 * _step;
+            _y = 0;// -1 * _step;
             _Clear();
             _viewer.OnCommandReaded += _viewer_OnCommandReaded;
         }
@@ -70,6 +70,7 @@ namespace marabu
         private byte[] _bytes = new byte[1];
         public void FeedLines(int count)
         {
+            _g.FillRectangle(_blueBush, new Rectangle(0, _y, _width, _y + count * _step)); // whatever
             _y += count * _step;
         }
         public void Draw(byte data)
@@ -99,10 +100,11 @@ namespace marabu
 
             for (var i = 0; i < count; i++)
             {
-                _g.FillRectangle(_blueBush, new Rectangle(_x, _y, _step, _step)); // whatever
+                _g.FillRectangle(_whiteBush, new Rectangle(_x, _y, _step, _step)); // whatever
                 _x += _step;
             }
         }
+        private int _bytesPerLine = 0;
         private void _viewer_OnCommandReaded(PrnCommands command, byte[] data, int count)
         {
             switch (command)
@@ -113,8 +115,14 @@ namespace marabu
                 case PrnCommands.LeftMargin:
                     if (count > 0)
                     {
-
+                        int offset = (960 - (_bytesPerLine * 4)) / 16;
+                        //_x += _step * count;
+                        _x = offset * _step;
                     }
+                    return;
+                case PrnCommands.BytesPerLine:
+                    _bytesPerLine = count;
+
                     return;
                 case PrnCommands.EndOfFile:
                     return;
@@ -143,13 +151,31 @@ namespace marabu
         public string MakePng(string prnFile)
         {
             _viewer.Load(prnFile);
-            Init(_viewer.LabelWidth, _viewer.LabelLength);
-
-            while (!_viewer.EndJob)
+            if (_viewer._version == PrnReader.PrnVersion.V3)
             {
-                _viewer.Read();
+                Init(960, 1400);
             }
-            string output = prnFile.Replace(".prn",".png");
+            else
+            {
+                Init(_viewer.LabelWidth, _viewer.LabelLength);
+            }
+            if (_viewer._version == PrnReader.PrnVersion.V3)
+            {
+                while (!_viewer.EndJob)
+                {
+                    _viewer.Read_V3();
+                }
+
+            }
+            else
+            {
+                while (!_viewer.EndJob)
+                {
+
+                    _viewer.Read();
+                }
+            }
+            string output = prnFile.Replace(".prn", ".png");
             Image.Save(output);
             return output;
         }

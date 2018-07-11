@@ -451,6 +451,11 @@ namespace marabu
             if (context.Request.HttpMethod == "POST")
             {
                 CobaClient client = _createClient();
+                if(rowUrl.IndexOf("/print?") >= 0)
+                {
+                    client.ExecutePrint(context);
+                    return false;
+                }
                 client.ExecutePost(context);
                 return false;
             }
@@ -503,8 +508,14 @@ namespace marabu
                     }
                 }
             }
-
-            filename = Path.Combine(_webAppDirectory, filename);
+            if (rowUrl.IndexOf("/data/") == 0)
+            {
+                filename = AppDomain.CurrentDomain.BaseDirectory + rowUrl;
+            }
+            else
+            {
+                filename = Path.Combine(_webAppDirectory, filename);
+            }
 
             if (File.Exists(filename))
             {

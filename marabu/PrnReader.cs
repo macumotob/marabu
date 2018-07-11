@@ -21,7 +21,7 @@ namespace marabu
     {
         public delegate void EventCommandReaded(PrnCommands command, byte[] data, int count);
         public event EventCommandReaded OnCommandReaded;
-        private enum PrnVersion
+        public enum PrnVersion
         {
             V2,
             V3,
@@ -95,7 +95,7 @@ namespace marabu
             }
             return _bt;
         }
-        private PrnVersion _version = PrnVersion.Unknown;
+        public PrnVersion _version = PrnVersion.Unknown;
         private byte _dotTabOffset;
         private int _labelLen = 0;
         private int _labelWidth = 0;
@@ -147,7 +147,9 @@ namespace marabu
             }
             else
             {
-
+                _version = PrnVersion.V3;
+                _ValidateDataV3();
+                return;
             }
             if(!(_bt == ESC && _next() == RESET))
             {
@@ -192,9 +194,10 @@ namespace marabu
         }
         private void _ValidateDataV3()
         {
+            _index = 0;
             int dataLen = _bytes.Length;
             if (dataLen <= 0) return;
-            _version = PrnVersion.V2;
+            
             if (!(_bt == ESC && _next() == RESET))
             {
                 return;
@@ -206,9 +209,13 @@ namespace marabu
             if (_next() == ESC)
             {
                 _next();
-                if (_bt != RESOLUTION_HIGH_V3)
+                if (_bt == RESOLUTION_HIGH_V3)
                 {
-                    throw new Exception("Invalide format");
+                   // throw new Exception("Invalide format");
+                }
+                else
+                {
+                    _index--;
                 }
                 _use_high_resolution = _bt == RESOLUTION_HIGH_V3;
             }
@@ -222,7 +229,7 @@ namespace marabu
             //    i++;
             //    _next();
             //}
-            _next();
+            //_next();
             _dataOffset = _index;
         }
         public void ResetData()
@@ -245,15 +252,19 @@ namespace marabu
             }
         }
         private byte _bytesPerLine;
+        private int _currentLine = 0;
         public void Read_V3()
         {
             if (_index >= _bytes.Length)
             {
+                EndJob = true;
                 RaiseCommandReaded(PrnCommands.EndOfFile);
                 return;
             }
+
             if (_bt != ESC && _bt != BEGIN_DATA && _bt != BEGIN_VALIDE_DATA)
             {
+                EndJob = true;
                 return;
             }
             if (_bt == ESC)
@@ -270,7 +281,8 @@ namespace marabu
             if (_bt == BYTES_PER_LINE)
             {
                 _bytesPerLine = _next();
-                RaiseCommandReaded(PrnCommands.BytesPerLine);
+               // _bytesPerLine = 90;
+                RaiseCommandReaded(PrnCommands.BytesPerLine, null, _bytesPerLine);
                 _next();
                 return;
             }
@@ -283,15 +295,19 @@ namespace marabu
             }
             if (_bt == BEGIN_DATA)
             {
+                _currentLine++;
                 _next();
                 int i = 0;
                 byte[] data = new byte[_bytesPerLine];
-                while (i < _bytesPerLine && _bt != ESC && _bt != BEGIN_DATA)
+                while (i < _bytesPerLine && _bt != ESC && _bt != BEGIN_DATA && _bt != BEGIN_VALIDE_DATA)
                 {
                     data[i] = _bt;
                     _next();
                     i++;
-
+                    //if (i >= _bytesPerLine)
+                    //{
+                    //    break;
+                    //}
                 }
                 RaiseCommandReaded(PrnCommands.PrintComprLine, data, i);
 
@@ -300,15 +316,20 @@ namespace marabu
             }
             if (_bt == BEGIN_VALIDE_DATA)
             {
+                _currentLine++;
                 _next();
                 int i = 0;
                 byte[] data = new byte[_bytesPerLine];
-                while (i < _bytesPerLine)// && _bt != ESC && _bt != BEGIN_DATA)
+                //while (i < _bytesPerLine && _bt != ESC && _bt != BEGIN_DATA && _bt != BEGIN_VALIDE_DATA)
+                while ( _bt != ESC && _bt != BEGIN_DATA && _bt != BEGIN_VALIDE_DATA)
                 {
                     data[i] = _bt;
                     _next();
                     i++;
-
+                    //if (i >= _bytesPerLine)
+                    //{
+                    //    break;
+                    //}
                 }
                 RaiseCommandReaded(PrnCommands.PrintLine, data, i);
 
@@ -339,6 +360,10 @@ namespace marabu
             }
             else
             {
+                while(_bt != ESC && _bt != BEGIN_DATA && _bt != BEGIN_VALIDE_DATA)
+                {
+                    _next();
+                }
 
             }
         }
@@ -347,6 +372,7 @@ namespace marabu
         {
             if(_index >= _bytes.Length)
             {
+                EndJob = true;
                 RaiseCommandReaded(PrnCommands.EndOfFile);
                 return;
             }
@@ -440,6 +466,158 @@ namespace marabu
 
             }
         }
+        public void Parse()
+        {
+            _index = 0;
+            while(_bt != END_JOB)
+            {
+                switch (_bt)
+                {
+                    case ESC:
+                        _next();
+                        switch (_bt)
+                        {
+                            case RESET:
+                                _next();
+                                break;
+                            case LEFT_MARGIN:
+                                {
+                                    int leftMargin = _next();
+                                    _next();
+                                }
+                                break;
+                            case FEED_LINES_COMMAND_V3:
+                                {
+                                    _feedLines = _next() * 256 + _next();
+                                    _next();
+                                }
+                                break;
+                            case BYTES_PER_LINE:
+                                {
+                                    _bytesPerLine = _next();
+                                    _next();
+
+                                }
+                                break;
+                            default:
+                                break;
+                        }
+                        break;
+                    case BEGIN_VALIDE_DATA:
+                        {
+                            _next();
+                            int i = 0;
+                            byte[] data = new byte[_bytesPerLine];
+                            //while (i < _bytesPerLine)// && _bt != ESC && _bt != BEGIN_DATA)
+                            while ( _bt != ESC && _bt != BEGIN_DATA && _bt != BEGIN_VALIDE_DATA)
+                            {
+                                data[i] = _bt;
+                                _next();
+                                i++;
+                                if(i >= _bytesPerLine)
+                                {
+
+                                }
+                            }
+
+                        }
+                        break;
+                    case BEGIN_DATA:
+                        {
+                            _next();
+                            int i = 0;
+                            byte[] data = new byte[_bytesPerLine];
+                            //while (i < _bytesPerLine && _bt != ESC && _bt != BEGIN_DATA)
+                            while (_bt != ESC && _bt != BEGIN_DATA && _bt != BEGIN_VALIDE_DATA)
+                            {
+                                data[i] = _bt;
+                                _next();
+                                i++;
+                                if (i >= _bytesPerLine)
+                                {
+
+                                }
+
+                            }
+                            break;
+                        }
+                    default:
+                        break;
+                }
+            }
+            if (_index >= _bytes.Length)
+            {
+                EndJob = true;
+                RaiseCommandReaded(PrnCommands.EndOfFile);
+                return;
+            }
+            if (_bt != ESC && _bt != BEGIN_DATA && _bt != BEGIN_VALIDE_DATA)
+            {
+                EndJob = true;
+                return;
+            }
+            if (_bt == ESC)
+            {
+                _next();
+            }
+            if (_bt == FEED_LINES_COMMAND)
+            {
+                _feedLines = _next() * 256 + _next();
+                RaiseCommandReaded(PrnCommands.FeedLines, null, _feedLines);
+                _next();
+                return;
+            }
+            if (_bt == BYTES_PER_LINE)
+            {
+                _bytesPerLine = _next();
+                RaiseCommandReaded(PrnCommands.BytesPerLine);
+                _next();
+                return;
+            }
+            if (_bt == BEGIN_DATA)
+            {
+                _next();
+                int i = 0;
+                byte[] data = new byte[_bytesPerLine];
+                while (i < _bytesPerLine && _bt != ESC && _bt != BEGIN_DATA)
+                {
+                    data[i] = _bt;
+                    _next();
+                    i++;
+
+                }
+                RaiseCommandReaded(PrnCommands.PrintComprLine, data, i);
+
+                return;
+
+            }
+            if (_bt == SHORT_FORM_FEED)
+            {
+                _next();
+                return;
+            }
+            if (_bt == CUT_PAPER)
+            {
+                _next();
+                return;
+            }
+            if (_bt == RESET)
+            {
+                _next();
+                return;
+            }
+            if (_bt == END_JOB)
+            {
+                RaiseCommandReaded(PrnCommands.EndJob);
+                _next();
+                return;
+            }
+            else
+            {
+
+            }
+        }
+
         public BitArray CurrentByte()
         {
             byte[] data = { _bt };
