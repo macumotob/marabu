@@ -83,7 +83,7 @@ namespace marabu
         //public bool Run(string host,int port,string menuId,string fieldId,string  cisco)
         private void _SetWebSocketHostPort()
         {
-            string file =AppDomain.CurrentDomain.BaseDirectory + "\\webapp\\js\\loader.js";
+            string file =AppDomain.CurrentDomain.BaseDirectory + "\\webapp\\js\\ws.js";
             string text = System.IO.File.ReadAllText(file);
             text = text.Replace("##ADRESS##", _host.ToString());
             text = text.Replace("##PORT##", _port.ToString());

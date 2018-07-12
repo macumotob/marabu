@@ -1,8 +1,13 @@
 ﻿function send_prn() {
     
     let photo = document.getElementById("image-file").files[0] // get file from input
+    if (!photo) {
+        id("result").innerHTML = "<h3> select prn file ...</h3>"
+        return;
+    }
     let fileName = photo.name;
-    //let formData = new FormData();
+    id("msg").value = fileName;
+    id("result").innerHTML = "<h3> wait ...</h3>"
     //formData.append("photo", photo);
     
 
@@ -13,6 +18,7 @@
             var text = this.responseText;
             var s = JSON.parse(text);
             id("result").innerHTML = "<img src='" + s.msg + "'/>"
+            document.getElementById("image-file").value = "";
         }
     };
     xhr.send(photo);//formData);
