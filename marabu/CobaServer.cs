@@ -510,7 +510,9 @@ namespace marabu
             }
             if (rowUrl.IndexOf("/data/") == 0)
             {
+                rowUrl = rowUrl.Substring(0, rowUrl.IndexOf('?'));
                 filename = AppDomain.CurrentDomain.BaseDirectory + rowUrl;
+                
             }
             else
             {

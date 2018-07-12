@@ -8,9 +8,9 @@ using System.Xml.Linq;
 
 namespace marabu
 {
-  public static class Utils
-  {
-    private static IDictionary<string, string> _mimeTypeMappings = new Dictionary<string, string>(StringComparer.InvariantCultureIgnoreCase) {
+    public static class Utils
+    {
+        private static IDictionary<string, string> _mimeTypeMappings = new Dictionary<string, string>(StringComparer.InvariantCultureIgnoreCase) {
 			#region extension to MIME type list
 			{".asf", "video/x-ms-asf"},
       {".asx", "video/x-ms-asf"},
@@ -78,67 +78,87 @@ namespace marabu
       {".zip", "application/zip"},
 			#endregion
 		};
-    public static string FileNameToMime(string filename)
-    {
-      string mime;
-      return _mimeTypeMappings.TryGetValue(System.IO.Path.GetExtension(filename), out mime) ? mime : "application/octet-stream";
-    }
-
-    public static dynamic Xml2Dynamic(string xml)
-    {
-      var document = XDocument.Parse(xml);
-      dynamic dobj = new ExpandoObject();
-      _xml_to_dynamic(dobj, document.Root);
-
-      return dobj;
-    }
-    private static void _xml_to_dynamic(dynamic parent, XElement node)
-    {
-      if (node.HasElements)
-      {
-        if (node.Elements(node.Elements().First().Name.LocalName).Count() > 1)
+        public static string FileNameToMime(string filename)
         {
-          var item = new ExpandoObject();
-          var list = new List<dynamic>();
-          foreach (var element in node.Elements())
-          {
-            _xml_to_dynamic(list, element);
-          }
-          _add_dynamic_property(item, node.Elements().First().Name.LocalName, list);
-          _add_dynamic_property(parent, node.Name.ToString(), item);
+            string mime;
+            return _mimeTypeMappings.TryGetValue(System.IO.Path.GetExtension(filename), out mime) ? mime : "application/octet-stream";
         }
-        else
+
+        public static dynamic Xml2Dynamic(string xml)
         {
-          var item = new ExpandoObject();
+            var document = XDocument.Parse(xml);
+            dynamic dobj = new ExpandoObject();
+            _xml_to_dynamic(dobj, document.Root);
 
-          foreach (var attribute in node.Attributes())
-          {
-            _add_dynamic_property(item, attribute.Name.ToString(), attribute.Value.Trim());
-          }
-          foreach (var element in node.Elements())
-          {
-            _xml_to_dynamic(item, element);
-          }
-          _add_dynamic_property(parent, node.Name.ToString(), item);
+            return dobj;
         }
-      }
-      else
-      {
-        _add_dynamic_property(parent, node.Name.ToString(), node.Value.Trim());
-      }
-    }
+        private static void _xml_to_dynamic(dynamic parent, XElement node)
+        {
+            if (node.HasElements)
+            {
+                if (node.Elements(node.Elements().First().Name.LocalName).Count() > 1)
+                {
+                    var item = new ExpandoObject();
+                    var list = new List<dynamic>();
+                    foreach (var element in node.Elements())
+                    {
+                        _xml_to_dynamic(list, element);
+                    }
+                    _add_dynamic_property(item, node.Elements().First().Name.LocalName, list);
+                    _add_dynamic_property(parent, node.Name.ToString(), item);
+                }
+                else
+                {
+                    var item = new ExpandoObject();
 
-    private static void _add_dynamic_property(dynamic parent, string name, object value)
-    {
-      if (parent is List<dynamic>)
-      {
-        (parent as List<dynamic>).Add(value);
-      }
-      else
-      {
-        (parent as IDictionary<String, object>)[name] = value;
-      }
-    }
-  }
+                    foreach (var attribute in node.Attributes())
+                    {
+                        _add_dynamic_property(item, attribute.Name.ToString(), attribute.Value.Trim());
+                    }
+                    foreach (var element in node.Elements())
+                    {
+                        _xml_to_dynamic(item, element);
+                    }
+                    _add_dynamic_property(parent, node.Name.ToString(), item);
+                }
+            }
+            else
+            {
+                _add_dynamic_property(parent, node.Name.ToString(), node.Value.Trim());
+            }
+        }
 
+        private static void _add_dynamic_property(dynamic parent, string name, object value)
+        {
+            if (parent is List<dynamic>)
+            {
+                (parent as List<dynamic>).Add(value);
+            }
+            else
+            {
+                (parent as IDictionary<String, object>)[name] = value;
+            }
+        }
+        // Reverses bits in a byte
+        public static byte Reverse(byte inByte)
+        {
+            byte result = 0x00;
+
+            for (byte mask = 0x80; Convert.ToInt32(mask) > 0; mask >>= 1)
+            {
+                // shift right current result
+                result = (byte)(result >> 1);
+
+                // tempbyte = 1 if there is a 1 in the current position
+                var tempbyte = (byte)(inByte & mask);
+                if (tempbyte != 0x00)
+                {
+                    // Insert a 1 in the left
+                    result = (byte)(result | 0x80);
+                }
+            }
+
+            return (result);
+        }
+    }
 }

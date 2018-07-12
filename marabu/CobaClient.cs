@@ -97,7 +97,8 @@ namespace marabu
                 PrnPicture pic = new PrnPicture();
                 string pngFileName = pic.MakePng(fileName);
                 //Console.WriteLine("action : " + action + " end : " + end.ToString());
-                this.SendJson(context, "{\"result\" : \"ok\", \"msg\" :\"data/" + name.Replace(".prn",".png") + "\"}");
+                string msg = string.Format("\"data/{0}?td={1}\"}}", name.Replace(".prn", ".png"), DateTime.Now.Ticks);
+                this.SendJson(context, "{\"result\" : \"ok\", \"msg\" :" + msg);// name.Replace(".prn",".png") + "\"}");
 
             }
             catch (Exception ex)

@@ -9,6 +9,40 @@
         input, textarea, button {
             outline: none;
         }
+
+        /*#image-file {
+            background-color: green;
+            color: white;
+        }*/
+
+        /*.avatar-zone {
+            width: 200px;
+            height: 200px;
+            background-color: #CCCCCC;
+        }*/
+
+        .overlay-layer {
+            width: 200px;
+            height: 40px;
+            position: absolute;
+            margin-top: -40px;
+            opacity: 0.5;
+            background-color: #000000;
+            z-index: 0;
+            font-size: 25px;
+            color: #FFFFFF;
+            text-align: center;
+            line-height: 40px;
+        }
+
+        .upload_btn {
+            position: absolute;
+            width: 200px;
+            height: 40px;
+            margin-top: -40px;
+            z-index: 10;
+            opacity: 0;
+        }
     </style>
     <script src="/js/loader.js"></script>
     <script src="/js/send.js"></script>
@@ -46,46 +80,54 @@
 </head>
 <body onload="mb_onload();">
 
-<nav class="navbar navbar-inverse">
-  <div class="container-fluid">
-      <div class="navbar-header">
-          <a class="navbar-brand" href="#" onclick="mb_onload()">PRN PRINT Emulator</a>
-          <label id="label_info"  class="navbar-brand" >INFO</label>
-      </div>
-    <div class="collapse navbar-collapse" id="myNavbar">
-      <ul class="nav navbar-nav">
-      </ul>
-    </div>
-  </div>
-</nav>
-  <div class="container">
-    <h2>Select prn file to preview</h2>
-    <form class="form-horizontal" >
-      <div class="form-group">
-        <label class="control-label col-sm-2" for="user">User:</label>
-        <div class="col-sm-10">
-          <input type="text" class="form-control" id="user" placeholder="Enter user name" required value="falcon"/>
+    <nav class="navbar navbar-inverse">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <a class="navbar-brand" href="#" onclick="mb_onload()">PRN PRINT Emulator</a>
+                <label id="label_info" class="navbar-brand">INFO</label>
+            </div>
+            <div class="collapse navbar-collapse" id="myNavbar">
+                <ul class="nav navbar-nav"></ul>
+            </div>
         </div>
-      </div>
-      <div class="form-group">
-        <label class="control-label col-sm-2" for="msg">Text:</label>
-        <div class="col-sm-10">
-          <input type="text" class="form-control" id="msg" placeholder="Enter text" required/>
+    </nav>
+    <div class="container">
+        <h2>Select prn file to preview</h2>
+        <form class="form-horizontal">
+            <div class="form-group">
+                <label class="control-label col-sm-2" for="user">User:</label>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" id="user" placeholder="Enter user name" required value="falcon" />
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-sm-2" for="msg">Text:</label>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" id="msg" placeholder="Enter text" required />
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-10">
+                    <!--<input id="image-file2" type="file" />-->
+                    <input id="image-file" type="file" class="upload_btn" onchange="send_prn();" />
+                    <div class="overlay-layer">Upload PRN</div>
+                </div>
+            </div>
+        </form>
+
+        <!--<div id="result-img" class="avatar-zone">
+        </div>-->
+
+        <div class="row">
+
+            <button class="btn btn-success container" onclick="send_prn();">Send</button>
+
+
+            <div class="panel panel-default">
+                <div class="panel-heading">Send Result</div>
+                <div class="panel-body" id="result"></div>
+            </div>
         </div>
-      </div>
-          <input id="image-file" type="file" />
-    </form>
-
-    <div class="row">
-      
-      <button class="btn btn-success container" onclick="send_prn();">Send</button>
-      
-
-      <div class="panel panel-default">
-        <div class="panel-heading">Send Result</div>
-        <div class="panel-body" id="result"></div>
-      </div>
     </div>
-  </div>
 </body>
 </html>
