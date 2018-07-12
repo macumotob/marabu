@@ -79,7 +79,7 @@ namespace marabu
         {
             get
             {
-                if(_index == 3070)
+                if (_index == 3070)
                 {
 
                 }
@@ -94,7 +94,7 @@ namespace marabu
         private byte _prev()
         {
             _index--;
-            if(_index < 0)
+            if (_index < 0)
             {
                 _index = 0;
             }
@@ -146,7 +146,7 @@ namespace marabu
             {
                 _next();
             }
-            if(_index == V2_HEADER_LENGTH)
+            if (_index == V2_HEADER_LENGTH)
             {
 
             }
@@ -156,17 +156,17 @@ namespace marabu
                 _ValidateDataV3();
                 return;
             }
-            if(!(_bt == ESC && _next() == RESET))
+            if (!(_bt == ESC && _next() == RESET))
             {
                 return;
             }
-            if(_next() == ESC && _next() == DOT_TAB_OFFSET)
+            if (_next() == ESC && _next() == DOT_TAB_OFFSET)
             {
                 _dotTabOffset = _next();
             }
-            if(_next() == ESC && _next() ==LENGTH_COMMAND)
+            if (_next() == ESC && _next() == LENGTH_COMMAND)
             {
-              //  _labelLen = _next() + _next() * 255;
+                //  _labelLen = _next() + _next() * 255;
                 _labelLen = _next() * 256 + _next();
                 //ESC, LCmd, (byte) (length >> 8), (byte) length }; - label len
 
@@ -175,10 +175,10 @@ namespace marabu
             {
                 _labelWidth = _next() * 256 + _next();
             }
-            if(_next() == ESC)
+            if (_next() == ESC)
             {
                 _next();
-                if(_bt != RESOLUTION_HIGH && _bt != RESOLUTION_NORMAL)
+                if (_bt != RESOLUTION_HIGH && _bt != RESOLUTION_NORMAL)
                 {
                     throw new Exception("Invalide format");
                 }
@@ -202,7 +202,7 @@ namespace marabu
             _index = 0;
             int dataLen = _bytes.Length;
             if (dataLen <= 0) return;
-            
+
             if (!(_bt == ESC && _next() == RESET))
             {
                 return;
@@ -216,7 +216,7 @@ namespace marabu
                 _next();
                 if (_bt == RESOLUTION_HIGH_V3)
                 {
-                   // throw new Exception("Invalide format");
+                    // throw new Exception("Invalide format");
                 }
                 else
                 {
@@ -242,13 +242,13 @@ namespace marabu
             _index = _dataOffset;
         }
         List<PrnCommands> _commands = new List<PrnCommands>();
-        private void RaiseCommandReaded(PrnCommands command, byte [] data = null, int count = -1)
+        private void RaiseCommandReaded(PrnCommands command, byte[] data = null, int count = -1)
         {
-            if(OnCommandReaded != null)
+            if (OnCommandReaded != null)
             {
                 _commands.Add(command);
-                OnCommandReaded(command, data,count);
-                
+                OnCommandReaded(command, data, count);
+
             }
         }
         public bool EndJob = false;
@@ -289,7 +289,7 @@ namespace marabu
             if (_bt == BYTES_PER_LINE)
             {
                 _bytesPerLine = _next();
-               // _bytesPerLine = 90;
+                // _bytesPerLine = 90;
                 RaiseCommandReaded(PrnCommands.BytesPerLine, null, _bytesPerLine);
                 _next();
                 return;
@@ -303,36 +303,37 @@ namespace marabu
             }
             if (_bt == BEGIN_DATA)
             {
-                try
-                {
-                    _currentLine++;
-                    _next();
-                    int i = 0;
-                    byte[] data = new byte[_bytesPerLine * 1024];
-                    while (_index < _bytes.Length
-                         // _bt != ESC 
-                         //&& _bt != BEGIN_DATA   
-                         //&& _bt != BEGIN_VALIDE_DATA  
-                         && !(_bt == FEED_LINES_COMMAND && _bytes[_index - 1] == ESC)
-                         && !(_bt == LEFT_MARGIN && _bytes[_index - 1] == ESC)
-                         && !(_bt == END_JOB && _bytes[_index - 1] == ESC)
-                        )
-                    {
-                        data[i] = _bt;
-                        _next();
-                        i++;
+                _ReadeCompressedData();
+                //try
+                //{
+                //    _currentLine++;
+                //    _next();
+                //    int i = 0;
+                //    byte[] data = new byte[_bytesPerLine * 1024];
+                //    while (_index < _bytes.Length
+                //         // _bt != ESC 
+                //         //&& _bt != BEGIN_DATA   
+                //         //&& _bt != BEGIN_VALIDE_DATA  
+                //         && !(_bt == FEED_LINES_COMMAND && _bytes[_index - 1] == ESC)
+                //         && !(_bt == LEFT_MARGIN && _bytes[_index - 1] == ESC)
+                //         && !(_bt == END_JOB && _bytes[_index - 1] == ESC)
+                //        )
+                //    {
+                //        data[i] = _bt;
+                //        _next();
+                //        i++;
 
-                    }
-                    if (_bytes[_index - 1] == ESC)
-                    {
-                        _index--;
-                    }
-                    RaiseCommandReaded(PrnCommands.PrintComprLine, data, i);
-                }
-                catch (Exception ex)
-                {
+                //    }
+                //    if (_bytes[_index - 1] == ESC)
+                //    {
+                //        _index--;
+                //    }
+                //    RaiseCommandReaded(PrnCommands.PrintComprLine, data, i);
+                //}
+                //catch (Exception ex)
+                //{
 
-                }
+                //}
                 return;
 
             }
@@ -342,7 +343,7 @@ namespace marabu
                 _next();
                 int i = 0;
                 byte[] data = new byte[_bytesPerLine];
-                while (i < _bytesPerLine )
+                while (i < _bytesPerLine)
                 {
                     data[i] = _bt;
                     _next();
@@ -381,18 +382,18 @@ namespace marabu
             }
             else
             {
-                while(_bt != ESC && _bt != BEGIN_DATA && _bt != BEGIN_VALIDE_DATA)
+                while (_bt != ESC && _bt != BEGIN_DATA && _bt != BEGIN_VALIDE_DATA)
                 {
                     _next();
                 }
 
             }
         }
-        
+
         public void Read()
         {
-            
-            if(_index >= _bytes.Length)
+
+            if (_index >= _bytes.Length)
             {
                 EndJob = true;
                 //RaiseCommandReaded(PrnCommands.EndOfFile);
@@ -405,64 +406,65 @@ namespace marabu
                 RaiseCommandReaded(PrnCommands.Error, null, _currentLine);
                 return;
             }
-            if(_bt == ESC)
+            if (_bt == ESC)
             {
                 _next();
             }
             if (_bt == FEED_LINES_COMMAND)
             {
                 _feedLines = _next() * 256 + _next();
-                RaiseCommandReaded(PrnCommands.FeedLines,null, _feedLines);
+                RaiseCommandReaded(PrnCommands.FeedLines, null, _feedLines);
                 _next();
                 return;
             }
             if (_bt == BYTES_PER_LINE)
             {
-                _bytesPerLine =  _next();
+                _bytesPerLine = _next();
                 RaiseCommandReaded(PrnCommands.BytesPerLine);
                 _next();
                 return;
             }
-            if(_bt == LEFT_MARGIN)
+            if (_bt == LEFT_MARGIN)
             {
                 int leftMargin = _next();
                 RaiseCommandReaded(PrnCommands.LeftMargin, null, leftMargin);
                 _next();
                 return;
             }
-            if(_bt == BEGIN_DATA)
+            if (_bt == BEGIN_DATA)
             {
-                try
-                {
-                    _currentLine++;
-                    _next();
-                    int i = 0;
-                    byte[] data = new byte[_bytesPerLine * 1024];
-                    while ( _index < _bytes.Length
-                         // _bt != ESC 
-                         //&& _bt != BEGIN_DATA   
-                         //&& _bt != BEGIN_VALIDE_DATA  
-                         && !( _bt == FEED_LINES_COMMAND  && _bytes[_index - 1] == ESC)
-                         && !(_bt == LEFT_MARGIN && _bytes[_index - 1] == ESC)
-                         && !(_bt == END_JOB && _bytes[_index - 1] == ESC)
-                        )
-                    {
-                        data[i] = _bt;
-                        _next();
-                        i++;
+                _ReadeCompressedData();
+                //try
+                //{
+                //    _currentLine++;
+                //    _next();
+                //    int i = 0;
+                //    byte[] data = new byte[_bytesPerLine * 1024];
+                //    while (_index < _bytes.Length
+                //         // _bt != ESC 
+                //         //&& _bt != BEGIN_DATA   
+                //         //&& _bt != BEGIN_VALIDE_DATA  
+                //         && !(_bt == FEED_LINES_COMMAND && _bytes[_index - 1] == ESC)
+                //         && !(_bt == LEFT_MARGIN && _bytes[_index - 1] == ESC)
+                //         && !(_bt == END_JOB && _bytes[_index - 1] == ESC)
+                //        )
+                //    {
+                //        data[i] = _bt;
+                //        _next();
+                //        i++;
 
-                    }
-                    if (_bytes[_index - 1] == ESC)
-                    {
-                        _index--;
-                        i--;
-                    }
-                    RaiseCommandReaded(PrnCommands.PrintComprLine, data, i);
-                }
-                catch(Exception ex)
-                {
+                //    }
+                //    if (_bytes[_index - 1] == ESC)
+                //    {
+                //        _index--;
+                //        i--;
+                //    }
+                //    RaiseCommandReaded(PrnCommands.PrintComprLine, data, i);
+                //}
+                //catch (Exception ex)
+                //{
 
-                }
+                //}
                 return;
 
             }
@@ -479,27 +481,27 @@ namespace marabu
                     i++;
 
                 }
-                RaiseCommandReaded(PrnCommands.PrintLine, data,i);
+                RaiseCommandReaded(PrnCommands.PrintLine, data, i);
 
                 return;
 
             }
-            if(_bt == SHORT_FORM_FEED)
+            if (_bt == SHORT_FORM_FEED)
             {
                 _next();
                 return;
             }
-            if(_bt == CUT_PAPER)
+            if (_bt == CUT_PAPER)
             {
                 _next();
                 return;
             }
-            if(_bt == RESET)
+            if (_bt == RESET)
             {
                 _next();
                 return;
             }
-            if(_bt == END_JOB)
+            if (_bt == END_JOB)
             {
                 EndJob = true;
                 RaiseCommandReaded(PrnCommands.EndJob);
@@ -512,10 +514,46 @@ namespace marabu
                 EndJob = true;
             }
         }
+        private void _ReadeCompressedData()
+        {
+            try
+            {
+                _currentLine++;
+                _next();
+                int i = 0;
+                byte[] data = new byte[_bytesPerLine * 1024];
+                while (_index < _bytes.Length
+                     // _bt != ESC 
+                     //&& _bt != BEGIN_DATA   
+                     //&& _bt != BEGIN_VALIDE_DATA  
+                     && !(_bt == FEED_LINES_COMMAND && _bytes[_index - 1] == ESC)
+                     && !(_bt == LEFT_MARGIN && _bytes[_index - 1] == ESC)
+                     && !(_bt == END_JOB && _bytes[_index - 1] == ESC)
+                    )
+                {
+                    data[i] = _bt;
+                    _next();
+                    i++;
+
+                }
+                if (_bytes[_index - 1] == ESC)
+                {
+                    _index--;
+                    i--;
+                }
+                RaiseCommandReaded(PrnCommands.PrintComprLine, data, i);
+            }
+            catch (Exception ex)
+            {
+
+            }
+            return;
+
+        }
         public void Parse()
         {
             _index = 0;
-            while(_bt != END_JOB)
+            while (_bt != END_JOB)
             {
                 switch (_bt)
                 {
@@ -555,12 +593,12 @@ namespace marabu
                             int i = 0;
                             byte[] data = new byte[_bytesPerLine];
                             //while (i < _bytesPerLine)// && _bt != ESC && _bt != BEGIN_DATA)
-                            while ( _bt != ESC && _bt != BEGIN_DATA && _bt != BEGIN_VALIDE_DATA)
+                            while (_bt != ESC && _bt != BEGIN_DATA && _bt != BEGIN_VALIDE_DATA)
                             {
                                 data[i] = _bt;
                                 _next();
                                 i++;
-                                if(i >= _bytesPerLine)
+                                if (i >= _bytesPerLine)
                                 {
 
                                 }
@@ -667,7 +705,7 @@ namespace marabu
         public BitArray CurrentByte()
         {
             byte[] data = { _bt };
-            return  new BitArray(data);
+            return new BitArray(data);
         }
     }
 }
